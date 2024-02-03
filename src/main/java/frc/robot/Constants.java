@@ -58,8 +58,8 @@ public final class Constants {
 
     /* Drive Motor PID Values */
     public static final double driveKP = 0.1;
-    public static final double driveKI = 0.0;
-    public static final double driveKD = 0.0;
+    public static final double driveKI = 0;
+    public static final double driveKD = 0;
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
@@ -68,14 +68,13 @@ public final class Constants {
     public static final double driveKA = 0.27;
 
     /* Drive Motor Conversion Factors */
-    public static final double driveConversionPositionFactor =
-        (wheelDiameter * Math.PI) / driveGearRatio;
+    public static final double driveConversionPositionFactor = (wheelDiameter * Math.PI) / driveGearRatio;
     public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
     public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 0.5; // meters per second
-    public static final double maxAngularVelocity = 2;
+    public static final double maxAngularVelocity = 0.5;
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;

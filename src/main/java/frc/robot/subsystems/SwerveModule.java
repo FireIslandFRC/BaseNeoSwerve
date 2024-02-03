@@ -10,6 +10,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.math.OnboardModuleState;
@@ -38,6 +39,8 @@ public class SwerveModule {
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
+
+
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
 
@@ -97,15 +100,25 @@ public class SwerveModule {
     driveMotor.setInverted(Constants.Swerve.driveInvert);
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
-    driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
-    driveController.setP(Constants.Swerve.angleKP);
-    driveController.setI(Constants.Swerve.angleKI);
-    driveController.setD(Constants.Swerve.angleKD);
-    driveController.setFF(Constants.Swerve.angleKFF);
+    //driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
+    driveEncoder.setPositionConversionFactor((calculateMetersPerRotation(
+            Constants.Swerve.wheelDiameter,
+            Constants.Swerve.driveGearRatio,
+            84)));
+    driveController.setP(Constants.Swerve.driveKP);
+    driveController.setI(Constants.Swerve.driveKI);
+    driveController.setD(Constants.Swerve.driveKD);
+    driveController.setFF(Constants.Swerve.driveKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
     driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);
   }
+
+  public static double calculateMetersPerRotation(
+      double wheelDiameter, double driveGearRatio, double pulsePerRotation)
+    {
+    return (Math.PI * wheelDiameter) / (driveGearRatio * pulsePerRotation);
+    }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
@@ -142,9 +155,10 @@ public class SwerveModule {
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
+  
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
         driveEncoder.getPosition(), new Rotation2d(integratedAngleEncoder.getPosition()));
   }
 
-}
+    }
