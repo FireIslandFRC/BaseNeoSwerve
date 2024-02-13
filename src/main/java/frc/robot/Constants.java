@@ -25,8 +25,8 @@ public final class Constants {
     public static final double visionHeightInches = 0;
     public static final double targetHeightInches = 0;
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(28);
-    public static final double wheelBase = Units.inchesToMeters(26);
+    public static final double trackWidth = Units.inchesToMeters(24);
+    public static final double wheelBase = Units.inchesToMeters(24);
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
