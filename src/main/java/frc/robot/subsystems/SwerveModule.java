@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.math.OnboardModuleState;
@@ -19,7 +20,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase{
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
@@ -84,6 +85,7 @@ public class SwerveModule {
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     integratedAngleEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
+
     angleController.setP(Constants.Swerve.angleKP);
     angleController.setI(Constants.Swerve.angleKI);
     angleController.setD(Constants.Swerve.angleKD);
@@ -101,10 +103,11 @@ public class SwerveModule {
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     //driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
-    driveEncoder.setPositionConversionFactor((calculateMetersPerRotation(
+    /*driveEncoder.setPositionConversionFactor((calculateMetersPerRotation(
             Constants.Swerve.wheelDiameter,
             Constants.Swerve.driveGearRatio,
-            84)));
+            42)));*/
+    driveEncoder.setPositionConversionFactor(0.05);
     driveController.setP(Constants.Swerve.driveKP);
     driveController.setI(Constants.Swerve.driveKI);
     driveController.setD(Constants.Swerve.driveKD);
@@ -155,10 +158,14 @@ public class SwerveModule {
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
-  
+
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
         driveEncoder.getPosition(), new Rotation2d(integratedAngleEncoder.getPosition()));
   }
 
+  @Override
+    public void periodic(){
+        SmartDashboard.putNumber("drive encoder", driveEncoder.getPosition());
     }
+}
